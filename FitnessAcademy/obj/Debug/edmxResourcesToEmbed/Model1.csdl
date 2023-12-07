@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Academy_fitnessModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Course">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="CourseRegistration" Relationship="Self.FK_CourseRegistration_Course" FromRole="Course" ToRole="CourseRegistration" />
+  </EntityType>
+  <EntityType Name="CourseRegistration">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="TrainerId" Type="Int32" Nullable="false" />
+    <Property Name="CourseId" Type="Int32" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="IsDone" Type="Boolean" Nullable="false" />
+    <Property Name="TotalPoint" Type="Int32" Nullable="false" />
+    <Property Name="CertificateImage" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Comment" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Course" Relationship="Self.FK_CourseRegistration_Course" FromRole="CourseRegistration" ToRole="Course" />
+    <NavigationProperty Name="Trainer" Relationship="Self.FK_CourseRegistration_Trainer" FromRole="CourseRegistration" ToRole="Trainer" />
+  </EntityType>
+  <EntityType Name="Trainer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="CourseRegistration" Relationship="Self.FK_CourseRegistration_Trainer" FromRole="Trainer" ToRole="CourseRegistration" />
+  </EntityType>
+  <Association Name="FK_CourseRegistration_Course">
+    <End Role="Course" Type="Self.Course" Multiplicity="1" />
+    <End Role="CourseRegistration" Type="Self.CourseRegistration" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CourseRegistration">
+        <PropertyRef Name="CourseId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CourseRegistration_Trainer">
+    <End Role="Trainer" Type="Self.Trainer" Multiplicity="1" />
+    <End Role="CourseRegistration" Type="Self.CourseRegistration" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Trainer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CourseRegistration">
+        <PropertyRef Name="TrainerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Academy_fitnessEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Course" EntityType="Self.Course" />
+    <EntitySet Name="CourseRegistration" EntityType="Self.CourseRegistration" />
+    <EntitySet Name="Trainer" EntityType="Self.Trainer" />
+    <AssociationSet Name="FK_CourseRegistration_Course" Association="Self.FK_CourseRegistration_Course">
+      <End Role="Course" EntitySet="Course" />
+      <End Role="CourseRegistration" EntitySet="CourseRegistration" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CourseRegistration_Trainer" Association="Self.FK_CourseRegistration_Trainer">
+      <End Role="Trainer" EntitySet="Trainer" />
+      <End Role="CourseRegistration" EntitySet="CourseRegistration" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
